@@ -42,7 +42,7 @@ public class StudentDaoImp implements StudentDao{
 		Connection con= DbUtil.provideConnection();
 		
 		try {
-		PreparedStatement ps=	con.prepareStatement(" update course set fees=? where corid=?");
+		PreparedStatement ps=	con.prepareStatement(" update course set fees=? where courseid=?");
 		ps.setInt(1, fees);
 		ps.setInt(2, id);
 		int x= ps.executeUpdate();
@@ -61,7 +61,7 @@ public class StudentDaoImp implements StudentDao{
 Connection con= DbUtil.provideConnection();
 		
 		try {
-		PreparedStatement ps=	con.prepareStatement(" delete from course where corid=?");
+		PreparedStatement ps=	con.prepareStatement(" delete from course where courseid=?");
 	
 		ps.setInt(1, id);
 		int x= ps.executeUpdate();
@@ -81,13 +81,13 @@ Connection con= DbUtil.provideConnection();
 Connection con= DbUtil.provideConnection();
 		
 		try {
-		PreparedStatement ps=	con.prepareStatement("select * from course where corid=?");
+		PreparedStatement ps=	con.prepareStatement("select * from course where courseid=?");
 	
 		ps.setInt(1, id);
 		ResultSet rs = ps.executeQuery();
 		if(rs!=null) {
 		while(rs.next()) {
-			System.out.println("Course id -"+rs.getInt("corid"));
+			System.out.println("Course id -"+rs.getInt("courseid"));
 			System.out.println("Batch -"+rs.getString("batch"));
 			System.out.println("Course fees -"+rs.getInt("fees"));
 			System.out.println("Seat avilablity -"+rs.getInt("seats"));
@@ -108,12 +108,12 @@ Connection con= DbUtil.provideConnection();
 	}
 
 	@Override
-	public void allocateStudent(String name, String email, int pass, int corId) {
+	public void allocateStudent(String name, String email, int password, int courseId) {
 		Connection con= DbUtil.provideConnection();
 		
 		try {
-			PreparedStatement ps1= con.prepareStatement("select * from course where corid=?");
-			ps1.setInt(1, corId);
+			PreparedStatement ps1= con.prepareStatement("select * from course where courseid=?");
+			ps1.setInt(1, courseId);
 		ResultSet rs1=	ps1.executeQuery();
 		int seat=0;
 		if(rs1!=null) {
@@ -122,18 +122,18 @@ Connection con= DbUtil.provideConnection();
 			}
 			
 			if(seat>=1) {
-				PreparedStatement ps2= con.prepareStatement("update course set seats=seats-1 where corid=?");
-				ps2.setInt(1, corId);
+				PreparedStatement ps2= con.prepareStatement("update course set seats=seats-1 where courseid=?");
+				ps2.setInt(1, courseId);
 				int x=ps2.executeUpdate();
 				if(x>0) {
-					System.out.println("Seat allocated sucessfully");
+					System.out.println("Seat allocated sucessfully!");
 				
 				PreparedStatement ps3= con.prepareStatement("insert into students (name, email, pass, batchid) values (?,?,?,?)");
 				//ps3.setInt(1, id);
 				ps3.setString(1, name);
 				ps3.setString(2, email);
-				ps3.setInt(3, pass);
-				ps3.setInt(4,corId);
+				ps3.setInt(3, password);
+				ps3.setInt(4,courseId);
 				
 			int y=	ps3.executeUpdate();
 			//System.out.println(ps3.executeUpdate());
@@ -144,14 +144,13 @@ Connection con= DbUtil.provideConnection();
 				
 				
 			}
-			}else System.out.println("seat not allocated try again!!");
+			}else System.out.println("seat not allocated please try again latter!");
 		}
-		else System.out.println("Course not foound!!!");
+		else System.out.println("Course not foound!");
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.getMessage();
-			//e.printStackTrace();
+			
 		}
 		
 		
@@ -171,19 +170,17 @@ Connection con= DbUtil.provideConnection();
 			System.out.println("Student roll number - "+rs.getInt("id"));
 			System.out.println("Student name - "+rs.getString("name"));
 			System.out.println("Student email - "+rs.getString("email"));
-			System.out.println("Student password - "+rs.getInt("pass"));
+			System.out.println("Student password - "+rs.getInt("password"));
 			System.out.println("Course id - "+rs.getInt("batchId"));
 			System.out.println("===================================");
 		}}
 		else {
-			System.out.println("record not found");
+			System.out.println("record not founded");
 		}
 		
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//System.out.println(e.getMessage());
-			System.out.println("syntex error try again!!!");
+			System.out.println("syntex error please try again latter!");
 		}
 		
 		
@@ -197,16 +194,14 @@ Connection con= DbUtil.provideConnection();
 Connection con= DbUtil.provideConnection();
 		
 		try {
-		PreparedStatement ps=	con.prepareStatement(" update course set seats = ? where corid=?");
+		PreparedStatement ps=	con.prepareStatement(" update course set seats = ? where courseid=?");
 		ps.setInt(1, seat);
 		ps.setInt(2, id);
 		int x= ps.executeUpdate();
-		if(x>0)System.out.println("course seats updated successfully!!");
-		else System.out.println("not updated try again!!");
+		if(x>0)System.out.println("course seats updated successfully!");
+		else System.out.println("not updated please try again latter!");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			System.out.println(e.getMessage());
-			//System.out.println("not updated try again!!!");
 		}
 		
 	}
@@ -221,11 +216,11 @@ Connection con= DbUtil.provideConnection();
 		ps.setString(1, name);
 		ps.setInt(2, id);
 		int x= ps.executeUpdate();
-		if(x>0)System.out.println("name  updated successfully!!");
-		else System.out.println("not updated try again!!");
+		if(x>0)System.out.println("name  updated successfully!");
+		else System.out.println("not updated please try again latter!");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("not updated try again!!!");
+			System.out.println("not updated please try again latter!");
 		}
 		
 		
@@ -241,37 +236,34 @@ Connection con= DbUtil.provideConnection();
 		ps.setString(1, email);
 		ps.setInt(2, id);
 		int x= ps.executeUpdate();
-		if(x>0)System.out.println("email updated successfully!!");
-		else System.out.println("not updated try again!!");
+		if(x>0)System.out.println("email updated successfully!");
+		else System.out.println("not updated please try again latter!");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("not updated try again!!!");
+			System.out.println("not updated please try again latter!");
 		}
 		
 	}
 
 	@Override
-	public void updatePassword(int id, int pass) {
+	public void updatePassword(int id, int password) {
 		// TODO Auto-generated method stub
 Connection con= DbUtil.provideConnection();
 		
 		try {
 		PreparedStatement ps=	con.prepareStatement(" update students set pass=? where id=?");
-		ps.setInt(1, pass);
+		ps.setInt(1, password);
 		ps.setInt(2, id);
 		int x= ps.executeUpdate();
 		if(x>0)System.out.println("password updated successfully!!");
 		else System.out.println("not updated try again!!");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("not updated try again!!!");
+			System.out.println("not updated try please again latter!");
 		}
 		
 	}
 
 	@Override
 	public void updateBatch(int id, int batchId) {
-		// TODO Auto-generated method stub
 Connection con= DbUtil.provideConnection();
 		
 		try {
@@ -279,11 +271,10 @@ Connection con= DbUtil.provideConnection();
 		ps.setInt(1, batchId);
 		ps.setInt(2, id);
 		int x= ps.executeUpdate();
-		if(x>0)System.out.println("batch  updated successfully!!");
-		else System.out.println("not updated try again!!");
+		if(x>0)System.out.println("batch  updated successfully!");
+		else System.out.println("not updated try please try again latter!");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("not updated try again!!!");
+			System.out.println("not updated please try again latter!");
 		}
 		
 	}
@@ -299,21 +290,22 @@ Connection con= DbUtil.provideConnection();
 		ResultSet rs = ps.executeQuery();
 		if(rs!=null) {
 		while(rs.next()) {
-			System.out.println("Course id -"+rs.getInt("corid"));
+			System.out.println("Course id -"+rs.getInt("courseid"));
 			System.out.println("Batch -"+rs.getString("batch"));
 			System.out.println("Course fees -"+rs.getInt("fees"));
 			System.out.println("Seat avilablity -"+rs.getInt("seats"));
 			System.out.println("===================================");
 		}}
 		else {
-			System.out.println("record not found");
+			System.out.println("Information not here");
 		}
 		
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+
 			//System.out.println(e.getMessage());
-			System.out.println("syntex error try again!!!");
+
+			System.out.println("syntex error please try again!");
 		}
 		
 		

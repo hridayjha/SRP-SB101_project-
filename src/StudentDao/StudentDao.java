@@ -8,11 +8,11 @@ public interface StudentDao {
 	abstract void updateSeat(int id,int seat);
 	abstract void dltCor(int id);
 	abstract void corDet(int id);
-	abstract void allocateStudent(String name,String email,int pass,int corId);
+	abstract void allocateStudent(String name,String email,int password,int courseId);
 	abstract void viewDet();
 	void updateName(int id,String name);
 	void updaEmail(int id,String email);
-	void updatePassword(int id,int pass);
+	void updatePassword(int id,int password);
 	void updateBatch(int id,int batchId);
 	void courseDet();
 	
